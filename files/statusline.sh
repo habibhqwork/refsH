@@ -6,6 +6,7 @@ setopt null_glob
 # Preset: SL_PRESET=minimal turns the optional segments off by default; any SL_SHOW_* you set wins.
 [[ ${SL_PRESET:-full} == minimal ]] && d=0 || d=1
 : ${SL_SHOW_AGE:=$d} ${SL_SHOW_VERSION:=$d} ${SL_SHOW_NET:=$d} ${SL_SHOW_DISK:=$d} ${SL_SHOW_LIMITS:=$d} ${SL_SHOW_CACHE:=$d}
+: ${SL_SHOW_COST:=0}          # opt in: estimated session cost (list-price estimate; mainly useful for API users)
 : ${SL_PROJECT_SEGMENTS:=0}   # local-site status (wp-env/docker) + node/php versions: off unless you opt in
 # Powerline/Nerd glyphs only if a Nerd/Powerline font is installed (override: SL_GLYPHS=1|0); else plain text
 if [[ ${SL_GLYPHS:-auto} == auto ]]; then
@@ -19,7 +20,7 @@ dir=$(j '.workspace.current_dir // .cwd'); model=$(j '.model.display_name')
 ctx=$(j '.context_window.used_percentage'); r5=$(j '.rate_limits.five_hour.used_percentage')
 r5at=$(j '.rate_limits.five_hour.resets_at'); r7=$(j '.rate_limits.seven_day.used_percentage')
 effort=$(j '.effort.level'); think=$(j '.thinking.enabled'); fast=$(j '.fast_mode')
-warm=$(j '.prompt_cache.warm'); sname=$(j '.session_name')
+cost=$(j '.cost.total_cost_usd'); warm=$(j '.prompt_cache.warm'); sname=$(j '.session_name')
 d=${dir/#$HOME/\~}
 col() { local p=${1%.*}; (( p < 50 )) && print 70 || { (( p < 80 )) && print 178 || print 160; } }
 COLS=$({ stty size </dev/tty 2>/dev/null; } 2>/dev/null | awk '{print $2}')
@@ -69,6 +70,7 @@ m="$model"; [[ -n $effort ]] && m+=" · ${${${${${effort:l}/#low/L}/#medium/M}/#
 l2=("16 208 $m")
 if [[ -n $ctx ]]; then n=$(( ${ctx%.*} / 10 )); bar=${(l:n::█:)}${(l:$((10-n))::░:)}; l2+=("255 25 ctx ${ctx%.*}%"); fi
 if (( SL_SHOW_LIMITS )) && [[ -n $r5 ]]; then t=""; [[ -n $r5at ]] && t=" ↻$(date -r $r5at +%-I:%M%p)"; l2+=("255 91 5h ${r5%.*}%$t"); fi
+(( SL_SHOW_COST )) && [[ -n $cost ]] && l2+=("16 220 $(printf '$%.2f' "$cost")")
 (( SL_SHOW_LIMITS )) && [[ -n $r7 ]] && l2+=("255 30 7d ${r7%.*}%")
 (( SL_SHOW_CACHE )) && [[ -n $warm ]] && { [[ $warm == true ]] && l2+=("16 70 cache warm") || l2+=("255 166 cache cold"); }
 

@@ -26,6 +26,7 @@ It wraps to your terminal width and installs **without overwriting any of your f
 | `ctx 10%` | Context window used |
 | `5h 2% ↻9:40PM`, `7d 10%` | Rate-limit usage and reset time |
 | `cache warm/cold` | Whether the prompt cache is warm |
+| `$0.42` | Opt-in (`SL_SHOW_COST=1`): estimated session cost. It is a list-price estimate computed by Claude Code, mainly useful for **API users**. On a Pro/Max subscription it is not what you are billed; watch `5h`/`7d` instead. |
 
 Every segment has its own colour. Optional segments can be hidden individually. Without a Nerd/Powerline font installed it automatically falls back to plain characters (force with `SL_GLYPHS=1` or `SL_GLYPHS=0`).
 
@@ -66,6 +67,7 @@ The installer creates `~/.claude/status-enhancer/config.sh` (and never overwrite
 SL_PRESET=minimal        # folder, git, model, effort, context only
 SL_PROJECT_SEGMENTS=1    # opt in: local-site status (wp-env/docker-compose) and node/php versions
 SL_GLYPHS=0              # plain text instead of powerline arrows
+SL_SHOW_COST=1           # opt in: estimated session cost (off by default)
 SL_SHOW_DISK=0           # hide any single segment: AGE VERSION NET DISK LIMITS CACHE
 ```
 
