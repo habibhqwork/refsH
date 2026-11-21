@@ -1,10 +1,8 @@
 # refsH: Claude Code Status Enhancer
 
-A safe, beginner-friendly **Mac starter kit** for [Claude Code](https://claude.com/claude-code): a powerline-style status line plus an optional iTerm2 + Oh My Zsh + Powerlevel10k terminal look, installed in two commands with a full undo.
+A powerline status line for [Claude Code](https://claude.com/claude-code) that matches the look of your **iTerm2 + Oh My Zsh + Powerlevel10k** prompt: project, git state, model and effort, context used, rate limits, cache state. It wraps to your terminal width, is easy to trim to a minimal version, and installs **without overwriting any of your files**.
 
-It is also made for **minimalists and existing iTerm2 users**: already running iTerm2 with Oh My Zsh and the Powerlevel10k theme? Skip the terminal script and just add the status line, then trim it down to exactly the segments you want.
-
-It wraps to your terminal width and installs **without overwriting any of your files**.
+Already running iTerm2, Oh My Zsh and the Powerlevel10k theme? Run one command and you are done. Your shell setup is not touched. Setting up a new Mac? An optional script installs that terminal stack for you too.
 
 > Unofficial community project. Not affiliated with or endorsed by Anthropic.
 
@@ -31,9 +29,9 @@ Every segment has its own colour. Optional segments can be hidden individually. 
 
 ## Who it is for
 
-- **New to the terminal:** run both scripts below and get the whole look.
-- **Already use iTerm2 + Oh My Zsh + Powerlevel10k:** run only `./install.sh`. Your shell setup is not touched; the status line lives inside Claude Code and is independent of your prompt theme.
+- **iTerm2 + Oh My Zsh + Powerlevel10k users (the main audience):** run only `./install.sh`. The status line lives inside Claude Code and is independent of your prompt theme, so nothing in your shell changes.
 - **Minimalists:** set `SL_PRESET=minimal` (see Configure) for just folder, git, model, effort and context.
+- **Setting up a new Mac:** run `./setup-terminal.sh` first to get iTerm2, Oh My Zsh and Powerlevel10k, then `./install.sh`.
 
 ## Install (macOS)
 
@@ -94,7 +92,7 @@ Tested so far:
 - `install.sh` against throwaway home folders: fresh, existing files, symlinks, invalid JSON, re-run, dry-run, uninstall.
 - `setup-terminal.sh` with real downloads of Oh My Zsh and Powerlevel10k into a fresh home folder (theme, `p10k` and the `claude` PATH line all load).
 
-**Not yet tested:** a full run on a completely clean Mac (real Homebrew and iTerm2 installs). Use `--dry-run` first, and please report issues.
+**Not yet tested:** a full run on a completely clean Mac (real Homebrew and iTerm2 installs). An automated clean-macOS test is planned. Use `--dry-run` first, and please report issues.
 
 ## Requirements and limits
 
