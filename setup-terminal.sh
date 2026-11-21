@@ -4,9 +4,10 @@
 #   - ~/.zshrc: backed up, then only (a) ZSH_THEME line and (b) the p10k source line are touched, if needed.
 #   - ~/.p10k.zsh: our config is installed ONLY if you have none (so the wizard is skipped, same look).
 # Flags: --dry-run (preview, change nothing)  --yes (no confirmation prompt)
+#        --no-brew (skip Homebrew, iTerm2, git and font installs; manage those yourself)
 set -euo pipefail
-DRY=0; YES=0
-for a in "$@"; do case "$a" in --dry-run) DRY=1;; --yes) YES=1;; -h|--help) sed -n '2,8p' "$0"; exit 0;; *) echo "Unknown option: $a"; exit 2;; esac; done
+DRY=0; YES=0; NOBREW=0
+for a in "$@"; do case "$a" in --dry-run) DRY=1;; --yes) YES=1;; --no-brew) NOBREW=1;; -h|--help) sed -n '2,9p' "$0"; exit 0;; *) echo "Unknown option: $a"; exit 2;; esac; done
 here="$(cd "$(dirname "$0")" && pwd)"
 say(){ echo "• $*"; }
 die(){ echo "✗ $*" >&2; echo "  Nothing further was changed." >&2; exit 1; }
@@ -32,12 +33,14 @@ fi
 net(){ if [[ ${SKIP_NETWORK:-0} == 1 ]]; then echo "  [skipped] $*"; else run "$@"; fi; }
 
 # ---------- 1. Homebrew ----------
-if [[ -x $BREW ]]; then say "Homebrew present"; else
+if (( NOBREW )); then say "--no-brew: skipping Homebrew, iTerm2, git and font"
+elif [[ -x $BREW ]]; then say "Homebrew present"; else
   say "Installing Homebrew (may ask for your password)"
   net /bin/bash -c '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
 fi
 SHELLENV='eval "$('"$BREW"' shellenv)"'
-if [[ -f $ZP ]] && grep -qF "brew shellenv" "$ZP"; then say "Homebrew already on PATH in .zprofile"
+if (( NOBREW )); then :
+elif [[ -f $ZP ]] && grep -qF "brew shellenv" "$ZP"; then say "Homebrew already on PATH in .zprofile"
 else
   if (( DRY )); then echo "  [dry-run] append brew shellenv to $ZP"; else
     [[ -s $ZP && $(tail -c1 "$ZP" | wc -l) -eq 0 ]] && printf '\n' >> "$ZP"
@@ -47,9 +50,9 @@ fi
 [[ -x $BREW ]] && eval "$("$BREW" shellenv)" || true
 
 # ---------- 2. iTerm2, git, font ----------
-if [[ -d /Applications/iTerm.app || -d $HOME/Applications/iTerm.app ]]; then say "iTerm2 present"; else say "Installing iTerm2"; net brew install --cask iterm2; fi
-if command -v git >/dev/null; then say "git present"; else say "Installing git"; net brew install git; fi
-if ls "$HOME/Library/Fonts" /Library/Fonts 2>/dev/null | grep -qi 'MesloLGS NF'; then say "Font MesloLGS NF present"
+if (( NOBREW )); then :; elif [[ -d /Applications/iTerm.app || -d $HOME/Applications/iTerm.app ]]; then say "iTerm2 present"; else say "Installing iTerm2"; net brew install --cask iterm2; fi
+if (( NOBREW )); then :; elif command -v git >/dev/null; then say "git present"; else say "Installing git"; net brew install git; fi
+if (( NOBREW )); then :; elif ls "$HOME/Library/Fonts" /Library/Fonts 2>/dev/null | grep -qi 'MesloLGS NF'; then say "Font MesloLGS NF present"
 else say "Installing font"; net brew install --cask font-meslo-lg-nerd-font || echo "  (font install failed: install MesloLGS NF manually)"; fi
 
 # ---------- 3. Oh My Zsh (never replaces an existing .zshrc) ----------

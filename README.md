@@ -8,10 +8,9 @@ It wraps to your terminal width and installs **without overwriting any of your f
 
 > Unofficial community project. Not affiliated with or endorsed by Anthropic.
 
-```
- ~/Projects/my-site  v1.4.6   main !1 ?4  4h  disk 103G free  online
- Sonnet 5.5 · H ◆think  ctx 10%  5h 2% ↻9:40PM  7d 10%  cache warm
-```
+![refsH status line: two rows with project, version, git, commit age, disk, network, model, effort, context, cost, 5h/7d limits and cache](docs/screenshot.png)
+
+*Rendered from the script's real output in a demo project (cost is the opt-in segment).*
 
 ## What you get
 
@@ -78,6 +77,7 @@ Project-specific segments (local site, node/php) are **off by default**.
 ```bash
 ./setup-terminal.sh --dry-run
 ./setup-terminal.sh
+./setup-terminal.sh --no-brew   # skip Homebrew/iTerm2/font; only Oh My Zsh + Powerlevel10k
 ```
 
 Installs only what is missing (Homebrew, iTerm2, MesloLGS NF, Oh My Zsh, Powerlevel10k). `.zshrc` is backed up and only the theme line and the `p10k` source line are touched. `~/.p10k.zsh` is installed only if you have none. It also makes sure `~/.local/bin` is on your PATH so the `claude` command keeps working.
@@ -90,7 +90,11 @@ Installs only what is missing (Homebrew, iTerm2, MesloLGS NF, Oh My Zsh, Powerle
 
 ## Testing status
 
-The installers were tested against throwaway home folders (fresh, existing files, symlinks, invalid JSON, re-run, dry-run, uninstall). A full run on a clean Mac (real Homebrew, iTerm2 and Oh My Zsh installs) is **still pending**. Please report issues.
+Tested so far:
+- `install.sh` against throwaway home folders: fresh, existing files, symlinks, invalid JSON, re-run, dry-run, uninstall.
+- `setup-terminal.sh` with real downloads of Oh My Zsh and Powerlevel10k into a fresh home folder (theme, `p10k` and the `claude` PATH line all load).
+
+**Not yet tested:** a full run on a completely clean Mac (real Homebrew and iTerm2 installs). Use `--dry-run` first, and please report issues.
 
 ## Requirements and limits
 
